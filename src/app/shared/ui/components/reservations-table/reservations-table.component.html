@@ -1,0 +1,180 @@
+<div class="reservations-table-container">
+  <!-- Header Section -->
+  <div class="flex flex-column sm:flex-row gap-3 justify-content-between align-items-start sm:align-items-center mb-4">
+    <!-- Title -->
+    <div>
+      <h1 class="text-2xl font-bold text-900 m-0 mb-1">Reservas</h1>
+      <p class="text-600 m-0 text-sm">Gestión y seguimiento de reservas de ofertas locales</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-2 flex-wrap">
+      <p-button
+        label="Filtros"
+        icon="pi pi-filter"
+        styleClass="p-button-outlined"
+        [badge]="hasActiveFilters() ? '1' : ''"
+        badgeClass="p-badge-info">
+      </p-button>
+
+      <p-button
+        label="Actualizar"
+        icon="pi pi-refresh"
+        styleClass="p-button-outlined"
+        (onClick)="onRefresh()"
+        [loading]="loading"
+        pTooltip="Refrescar listado de reservas">
+      </p-button>
+
+      <p-button
+        label="Exportar"
+        icon="pi pi-download"
+        styleClass="p-button-outlined p-button-secondary"
+        (onClick)="onExport()"
+        [loading]="exporting">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Search and Actions Bar -->
+  <div class="surface-card p-3 border-round mb-4">
+    <div class="flex flex-column sm:flex-row gap-3 align-items-stretch sm:align-items-center">
+      <!-- Global Search -->
+      <div class="flex-1">
+        <span class="p-input-icon-left w-full">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            placeholder="Buscar por PNR, comprador, email, oferta..."
+            class="w-full"
+            [(ngModel)]="filters.global"
+            (input)="onFilterChange()"
+            [disabled]="loading">
+        </span>
+      </div>
+
+      <!-- Clear Filter Button -->
+      <p-button
+        *ngIf="filters.global"
+        icon="pi pi-times"
+        styleClass="p-button-text p-button-rounded"
+        pTooltip="Limpiar filtros"
+        (onClick)="clearFilters()">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Table Container with Horizontal Scroll -->
+  <div class="surface-card border-round overflow-hidden">
+    <!-- Table Info Bar -->
+    <div class="p-3 border-bottom-1 surface-border flex flex-column sm:flex-row gap-2 justify-content-between align-items-start sm:align-items-center">
+      <div class="flex align-items-center gap-2">
+        <i class="pi pi-list text-primary"></i>
+        <span class="font-medium">{{ pagination.totalItems }} reservas</span>
+      </div>
+
+      <!-- Pagination Info -->
+      <div class="text-sm text-600">
+        Mostrando {{ getCurrentRangeText() }}
+      </div>
+    </div>
+
+    <!-- Responsive Table Wrapper -->
+    <div class="table-responsive">
+      <p-table
+        [value]="reservations"
+        [loading]="loading"
+        [paginator]="true"
+        [rows]="pagination.size"
+        [totalRecords]="pagination.totalItems"
+        [lazy]="true"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [showCurrentPageReport]="false"
+        [sortMode]="'single'"
+        styleClass="p-datatable-sm p-datatable-striped"
+        (onLazyLoad)="onTableEvent($event)"
+        [dataKey]="'id'"
+        [tableStyle]="{'min-width': '800px'}"
+        loadingIcon="pi pi-spinner pi-spin">
+
+        <!-- Empty Template -->
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center p-6">
+              <i class="pi pi-inbox text-4xl text-400 mb-3 block"></i>
+              <div class="text-lg font-medium text-700 mb-2">No hay reservas</div>
+              <div class="text-sm text-600">No se encontraron reservas con los filtros actuales</div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- Header -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="pnr" style="min-width: 100px;">
+              <div class="flex align-items-center gap-2">
+                PNR <p-sortIcon field="pnr"></p-sortIcon>
+              </div>
+            </th>
+            <th style="min-width: 140px;">FECHA</th>
+            <th style="min-width: 180px;">COMPRADOR</th>
+            <th style="min-width: 200px;">PRODUCTO</th>
+            <th style="min-width: 100px;">ESTADO</th>
+            <th style="min-width: 100px;">PAGO</th>
+            <th style="min-width: 120px;" class="text-right">MONTO</th>
+          </tr>
+        </ng-template>
+
+        <!-- Body -->
+        <ng-template pTemplate="body" let-reservation>
+          <tr class="cursor-pointer hover:surface-hover" (click)="onViewReservation(reservation)">
+            <td>
+              <div class="font-bold text-primary text-sm">{{ reservation.pnr }}</div>
+            </td>
+
+            <td>
+              <div class="text-sm text-700">{{ formatDate(reservation.createdAt) }}</div>
+              <div class="text-xs text-500">{{ formatTime(reservation.createdAt) }}</div>
+            </td>
+
+            <td>
+              <div class="text-sm font-medium text-900">{{ reservation.customerName }}</div>
+              <div class="text-xs text-600 truncate" style="max-width: 160px;">{{ reservation.customerEmail }}</div>
+              <div class="text-xs text-500">{{ getLocationText(reservation) }}</div>
+            </td>
+
+            <td>
+              <div class="flex align-items-center gap-2 mb-1">
+                <i [class]="getProductTypeIcon(reservation.productType)" class="text-primary text-sm"></i>
+                <span class="text-sm font-medium">{{ getProductTypeLabel(reservation.productType) }}</span>
+              </div>
+              <div class="text-xs text-600 truncate" style="max-width: 180px;">{{ getProductDescription(reservation) }}</div>
+            </td>
+
+            <td>
+              <p-tag
+                [value]="getStatusLabel(reservation.status)"
+                [severity]="uiConfig.getStatusSeverity(reservation.status)"
+                styleClass="text-xs">
+              </p-tag>
+            </td>
+
+            <td>
+              <p-tag
+                [value]="getPaymentStatusLabel(reservation.paymentStatus)"
+                [severity]="uiConfig.getPaymentStatusSeverity(reservation.paymentStatus)"
+                styleClass="text-xs">
+              </p-tag>
+            </td>
+
+            <td class="text-right">
+              <div class="font-bold text-900">{{ uiConfig.formatCurrency(reservation.totalAmount, reservation.currency) }}</div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>

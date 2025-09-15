@@ -1,0 +1,18 @@
+<div class="min-w-[320px] max-w-[480px] p-4">
+  <h3 class="text-lg font-semibold mb-2">Detalle Reserva</h3>
+  <ng-container *ngIf="reservation as r; else loadingTpl">
+    <div class="space-y-1 text-sm">
+      <div><span class="font-medium">ID:</span> {{ r.id }}</div>
+      <div><span class="font-medium">Cliente:</span> {{ r.customerName }}</div>
+      <div><span class="font-medium">Estado:</span> {{ r.status }}</div>
+      <div><span class="font-medium">Producto:</span> {{ r.productType }}</div>
+      <div><span class="font-medium">Creado:</span> {{ r.createdAt | date:'short' }}</div>
+    </div>
+  </ng-container>
+  <ng-template #loadingTpl>
+    <div class="py-6 text-center">Cargando...</div>
+  </ng-template>
+  <div class="mt-4 text-right">
+    <button mat-stroked-button (click)="close?.()">Cerrar</button>
+  </div>
+</div>

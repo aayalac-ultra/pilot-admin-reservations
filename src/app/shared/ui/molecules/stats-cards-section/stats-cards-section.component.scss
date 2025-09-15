@@ -1,0 +1,57 @@
+// Stats Cards Section - BEM Nomenclature
+.stats-cards-section {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+// Flex container para las cards
+.stats-cards-section__container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+// Cada card individual
+.stats-cards-section__card {
+  flex: 1 1 auto;
+  min-width: 280px; // Ancho mínimo para que se vea bien
+  max-width: 400px; // Ancho máximo para evitar que se estiren demasiado
+}
+
+// Responsive behavior
+@media (max-width: 640px) {
+  .stats-cards-section__container {
+    gap: 0.75rem; // Reducir gap en mobile
+  }
+
+  .stats-cards-section__card {
+    min-width: 240px; // Reducir min-width en mobile
+
+    // Primera card ocupa todo el ancho en mobile
+    &:first-child {
+      flex: 1 1 100%;
+      max-width: none;
+    }
+
+    // Segunda y tercera card comparten el espacio
+    &:nth-child(2),
+    &:nth-child(3) {
+      flex: 1 1 calc(50% - 0.375rem);
+      min-width: 0; // Permitir que se contraigan
+      max-width: none;
+    }
+  }
+}
+
+// Para pantallas muy pequeñas, hacer todas las cards full-width
+@media (max-width: 480px) {
+  .stats-cards-section__card {
+    &:nth-child(2),
+    &:nth-child(3) {
+      flex: 1 1 100%;
+    }
+  }
+}

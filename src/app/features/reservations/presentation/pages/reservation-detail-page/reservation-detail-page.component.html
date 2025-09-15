@@ -1,0 +1,424 @@
+<div class="reservation-detail-container">
+  <!-- Header -->
+  <div class="detail-header">
+    <div class="header-left">
+      <p-button
+        icon="pi pi-arrow-left"
+        styleClass="p-button-text p-button-rounded"
+        (onClick)="goBack()"
+        pTooltip="Volver al listado">
+      </p-button>
+
+      <div class="header-info" *ngIf="reservation">
+        <h1>Oferta Local {{ reservation.pnr }}</h1>
+        <p>{{ getOfferTitle(reservation) }}</p>
+      </div>
+    </div>
+
+    <div class="header-right" *ngIf="reservation">
+      <p-tag
+        [value]="getStatusLabel(reservation.status)"
+        [severity]="getStatusSeverity(reservation.status)">
+      </p-tag>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading$ | async">
+    <p-progressSpinner strokeWidth="3"></p-progressSpinner>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="detail-grid" *ngIf="reservation && !(loading$ | async)">
+
+    <!-- Left Column -->
+    <div class="main-content">
+
+      <!-- Información General -->
+      <section class="info-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-info-circle"></i>
+            <h2>Información general</h2>
+          </div>
+          <p-tag
+            [value]="getStatusMessage(reservation.status)"
+            [severity]="getStatusSeverity(reservation.status)">
+          </p-tag>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Código de Reserva (PNR)</label>
+            <span class="value primary">{{ reservation.pnr }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Fecha de Creación</label>
+            <span class="value">{{ formatDate(reservation.createdAt) }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Marketplace</label>
+            <span class="value">{{ reservation.marketplace.name || 'BAC Costa Rica' }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Vigencia</label>
+            <span class="value">{{ getVigenciaText(reservation) }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Proveedor</label>
+            <span class="value">Librería Cultural</span>
+          </div>
+
+          <div class="info-item">
+            <label>Última Actualización</label>
+            <span class="value">{{ formatDate(reservation.updatedAt) }}</span>
+          </div>
+
+          <div class="info-item full-width">
+            <label>Fuente</label>
+            <span class="value">Mobile</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Precios y Pagos -->
+      <section class="pricing-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-dollar"></i>
+            <h2>Precios y Pagos</h2>
+          </div>
+          <span class="pricing-total">{{ uiConfig.formatCurrency(reservation.totalAmount, reservation.currency) }} - Pago Exitoso</span>
+        </div>
+
+        <div class="pricing-content">
+          <!-- Desglose de Precios -->
+          <div class="price-breakdown">
+            <h3>Desglose de Precios (USD)</h3>
+
+            <div class="price-row">
+              <span>Valor del Plan:</span>
+              <span>{{ uiConfig.formatCurrency(reservation.totalAmount - 50, reservation.currency) }}</span>
+            </div>
+
+            <div class="price-row">
+              <span>Impuestos:</span>
+              <span>{{ uiConfig.formatCurrency(50, reservation.currency) }}</span>
+            </div>
+
+            <div class="price-total">
+              <span>Total:</span>
+              <span>{{ uiConfig.formatCurrency(reservation.totalAmount, reservation.currency) }}</span>
+            </div>
+          </div>
+
+          <!-- Tarifa Final -->
+          <div class="final-pricing">
+            <h3>Tarifa Final</h3>
+            <div class="final-amount">{{ uiConfig.formatCurrency(reservation.totalAmount * 0.1, reservation.currency) }}</div>
+
+            <div class="commitment-section">
+              <div class="commitment-header">
+                <span>Compromiso del Pago</span>
+                <span>+{{ (reservation.totalAmount * 0.1 * 100 / reservation.totalAmount).toFixed(0) }}%</span>
+              </div>
+
+              <div class="progress-container">
+                <p-progressBar [value]="100" styleClass="custom-progress">
+                  <ng-template pTemplate="content">
+                    <div class="progress-content">
+                      100% Directo {{ uiConfig.formatCurrency(reservation.totalAmount * 0.1, reservation.currency) }}
+                    </div>
+                  </ng-template>
+                </p-progressBar>
+              </div>
+
+              <div class="progress-note">
+                Pago realizado completamente en efectivo
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert de Inconsistencia -->
+          <div class="inconsistency-alert">
+            <i class="pi pi-exclamation-triangle"></i>
+            <div>
+              <strong>Inconsistencia Detectada</strong>
+              <p>El monto aprobado ({{ uiConfig.formatCurrency(reservation.totalAmount, reservation.currency) }}) no coincide con el total de la reserva ({{ uiConfig.formatCurrency(reservation.totalAmount + 50, reservation.currency) }})</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Historial de Pagos -->
+      <section class="payments-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-credit-card"></i>
+            <h2>Historial de Pagos (1)</h2>
+          </div>
+        </div>
+
+        <div class="payment-entry">
+          <div class="payment-badge">P #1</div>
+          <div class="payment-details">
+            <div class="payment-tags">
+              <p-tag value="APROBADO" severity="success" styleClass="text-xs"></p-tag>
+              <p-tag value="EN PROCESAMIENTO" severity="warning" styleClass="text-xs"></p-tag>
+            </div>
+
+            <div class="payment-info-grid">
+              <div class="payment-info-item">
+                <label>Código del Pago</label>
+                <span>X-7AIM1FVU</span>
+              </div>
+              <div class="payment-info-item">
+                <label>Pago Aprobado</label>
+                <span>--</span>
+              </div>
+              <div class="payment-info-item">
+                <label>Fecha y Hora</label>
+                <span>{{ formatDateTime(reservation.createdAt) }}</span>
+              </div>
+              <div class="payment-info-item">
+                <label>Monto Aprobado</label>
+                <span>{{ uiConfig.formatCurrency(reservation.totalAmount, reservation.currency) }}</span>
+              </div>
+              <div class="payment-info-item">
+                <label>Ver detalles</label>
+                <p-button label="Actualizar" icon="pi pi-refresh" styleClass="p-button-text p-button-sm"></p-button>
+              </div>
+              <div class="payment-info-item">
+                <label>Transacciones Aprobadas</label>
+                <span>2 de 2 aprobadas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-summary">
+          <p-button
+            label="Total de pagos realizados: 1 de 1 máximo"
+            icon="pi pi-plus"
+            styleClass="p-button-outlined p-button-sm">
+          </p-button>
+        </div>
+      </section>
+
+      <!-- Historial de Eventos -->
+      <section class="events-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-calendar"></i>
+            <h2>Historial de Eventos</h2>
+          </div>
+          <p-button label="1 evento" styleClass="p-button-text p-button-sm"></p-button>
+        </div>
+
+        <div class="events-content">
+          <p class="events-description">Registro completo de eventos y auditoría</p>
+
+          <div class="event-timeline">
+            <div class="event-item">
+              <div class="event-icon">
+                <i class="pi pi-check"></i>
+              </div>
+              <div class="event-details">
+                <div class="event-title">Creación de reserva de oferta local</div>
+                <div class="event-subtitle">(evento externo)</div>
+                <div class="event-time">{{ formatDateTime(reservation.createdAt) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column - Sidebar -->
+    <div class="sidebar-content">
+
+      <!-- Acciones Rápidas -->
+      <section class="actions-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-cog"></i>
+            <h2>Acciones Rápidas</h2>
+          </div>
+        </div>
+
+        <div class="actions-content">
+          <p-button
+            label="Descargar Voucher"
+            icon="pi pi-download"
+            styleClass="w-full p-button-outlined mb-2"
+            (onClick)="downloadVoucher()">
+          </p-button>
+
+          <p-button
+            label="Reservar Voucher a Cliente"
+            icon="pi pi-send"
+            styleClass="w-full p-button-outlined mb-2"
+            [disabled]="reservation.status !== 'CONFIRMED'"
+            (onClick)="sendVoucherToClient()">
+          </p-button>
+
+          <p-button
+            label="Descargar Reporte"
+            icon="pi pi-file-pdf"
+            styleClass="w-full p-button-outlined mb-3"
+            (onClick)="downloadReport()">
+          </p-button>
+
+          <hr class="actions-divider">
+
+          <!-- Main Action Buttons -->
+          <p-button
+            label="Emitir Reserva"
+            icon="pi pi-check"
+            styleClass="w-full p-button-success p-button-lg mb-2"
+            [disabled]="reservation.status !== 'PENDING'"
+            [loading]="(loading$ | async) || false"
+            (onClick)="confirmReservation()">
+          </p-button>
+
+          <p-button
+            label="Cancelar Reserva"
+            icon="pi pi-times"
+            styleClass="w-full p-button-outlined p-button-danger p-button-lg"
+            [disabled]="reservation.status === 'CANCELLED'"
+            [loading]="(loading$ | async) || false"
+            (onClick)="cancelReservation()">
+          </p-button>
+        </div>
+      </section>
+
+      <!-- Comprador -->
+      <section class="buyer-section">
+        <div class="section-header collapsible" (click)="toggleBuyerSection()">
+          <div class="header-left">
+            <i class="pi pi-user"></i>
+            <h2>Comprador</h2>
+          </div>
+          <i class="pi pi-chevron-down" [class.rotated]="buyerExpanded"></i>
+        </div>
+
+        <div class="buyer-content" [class.collapsed]="!buyerExpanded">
+          <div class="buyer-info">
+            <div class="buyer-item">
+              <label>Nombre</label>
+              <span>{{ reservation.customerName }}</span>
+            </div>
+
+            <div class="buyer-item">
+              <label>Email</label>
+              <span>{{ reservation.customerEmail }}</span>
+            </div>
+
+            <div class="buyer-item">
+              <label>Teléfono</label>
+              <span>+507 500 4485 871</span>
+            </div>
+
+            <div class="buyer-item">
+              <label>Documento</label>
+              <span>4605000 (ID)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Viajeros -->
+      <section class="travelers-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-users"></i>
+            <h2>Viajeros</h2>
+          </div>
+          <p-tag value="1" severity="info" styleClass="traveler-count"></p-tag>
+        </div>
+
+        <div class="travelers-content">
+          <div class="traveler-card">
+            <div class="traveler-header">
+              <div class="traveler-avatar">
+                {{ getInitials(reservation.customerName) }}
+              </div>
+              <div class="traveler-name">
+                <div class="name">{{ reservation.customerName }}</div>
+                <div class="type">Beneficiario Personal</div>
+              </div>
+            </div>
+
+            <div class="traveler-details">
+              <div class="traveler-item">
+                <label>Email:</label>
+                <span>{{ reservation.customerEmail }}</span>
+              </div>
+              <div class="traveler-item">
+                <label>Adulto - Masculino</label>
+              </div>
+              <div class="traveler-item">
+                <label>Fecha de Nacimiento:</label>
+                <span>09/04/1982</span>
+              </div>
+              <div class="traveler-item">
+                <label>Género:</label>
+                <span>Masculino</span>
+              </div>
+              <div class="traveler-item">
+                <label>Nacionalidad:</label>
+                <span>Panameño</span>
+              </div>
+              <div class="traveler-item">
+                <label>Documento:</label>
+                <span>7997364 (ID)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comentarios Internos -->
+      <section class="comments-section">
+        <div class="section-header">
+          <div class="header-left">
+            <i class="pi pi-comments"></i>
+            <h2>Comentarios Internos</h2>
+          </div>
+          <p-button
+            icon="pi pi-plus"
+            styleClass="p-button-text p-button-sm"
+            (onClick)="addComment()">
+          </p-button>
+        </div>
+
+        <div class="comments-content">
+          <div class="empty-comments">
+            <i class="pi pi-comment"></i>
+            <p>No hay comentarios internos.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="!reservation && !(loading$ | async)">
+    <i class="pi pi-exclamation-triangle"></i>
+    <h3>Reserva no encontrada</h3>
+    <p>La reserva solicitada no existe o no tienes permisos para verla.</p>
+    <p-button
+      label="Volver al Listado"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()">
+    </p-button>
+  </div>
+</div>
+
+<!-- Toast and Dialog -->
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog></p-confirmDialog>

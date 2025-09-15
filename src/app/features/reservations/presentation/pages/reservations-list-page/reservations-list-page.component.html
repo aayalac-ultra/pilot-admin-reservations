@@ -1,0 +1,23 @@
+<div class="p-2 sm:p-4 md:p-6">
+  <!-- Stats Cards Section - Executive Summary -->
+  <app-stats-cards-section
+    [data]="getStatsCardsData(reservations$ | async)">
+  </app-stats-cards-section>
+
+  <!-- Enterprise Reservations Table -->
+  <app-reservations-table
+    [reservations]="(reservations$ | async) || []"
+    [loading]="(loading$ | async) || false"
+    [exporting]="exporting"
+    [pagination]="(pagination$ | async) || defaultPagination"
+    (filtersChange)="onFiltersChange($event)"
+    (actionEvent)="onActionEvent($event)"
+    (sortChange)="onSortChange($event)"
+    (pageChange)="onPageChange($event)"
+    (refresh)="onRefresh()"
+    (export)="onExport()">
+  </app-reservations-table>
+</div>
+
+<!-- Toast for notifications -->
+<p-toast position="top-right"></p-toast>

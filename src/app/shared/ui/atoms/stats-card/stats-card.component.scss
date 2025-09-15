@@ -1,0 +1,86 @@
+.stats-card {
+  @apply bg-white rounded-2xl p-6 shadow-sm border border-gray-100;
+  @apply hover:shadow-md hover:border-gray-200;
+  @apply transition-all duration-200 ease-in-out;
+  @apply cursor-default;
+
+  &__icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center mb-4;
+    @apply transition-all duration-200;
+  }
+
+  &__content {
+    @apply space-y-1;
+  }
+
+  &__title {
+    @apply text-sm font-medium text-gray-600;
+    @apply leading-tight;
+  }
+
+  &__value {
+    @apply text-2xl font-bold text-gray-900;
+    @apply leading-none;
+  }
+
+  &__trend {
+    @apply flex items-center mt-2;
+    @apply opacity-80;
+  }
+
+  // Color variants for hover effects
+  &--blue:hover {
+    @apply border-blue-200;
+
+    .stats-card__icon {
+      @apply bg-blue-200 text-blue-700;
+    }
+  }
+
+  &--green:hover {
+    @apply border-green-200;
+
+    .stats-card__icon {
+      @apply bg-green-200 text-green-700;
+    }
+  }
+
+  &--orange:hover {
+    @apply border-orange-200;
+
+    .stats-card__icon {
+      @apply bg-orange-200 text-orange-700;
+    }
+  }
+
+  &--purple:hover {
+    @apply border-purple-200;
+
+    .stats-card__icon {
+      @apply bg-purple-200 text-purple-700;
+    }
+  }
+
+  &--gray:hover {
+    @apply border-gray-300;
+
+    .stats-card__icon {
+      @apply bg-gray-200 text-gray-700;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .stats-card {
+    @apply p-4;
+
+    &__icon {
+      @apply w-10 h-10 mb-3;
+    }
+
+    &__value {
+      @apply text-xl;
+    }
+  }
+}

@@ -1,0 +1,125 @@
+.reservations-table-container {
+  /* Mobile-first responsive design */
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .p-datatable {
+    .p-datatable-table {
+      border-collapse: collapse;
+    }
+    
+    .p-datatable-thead > tr > th {
+      background: var(--surface-ground);
+      border-bottom: 2px solid var(--surface-border);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      color: var(--text-color-secondary);
+      padding: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .p-datatable-tbody > tr {
+      border-bottom: 1px solid var(--surface-border);
+      transition: all 0.2s;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      background-color: var(--surface-hover) !important;
+    }
+
+    .p-datatable-tbody > tr > td {
+      padding: 0.75rem;
+      vertical-align: top;
+    }
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .p-tag {
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.5rem;
+    font-weight: 600;
+  }
+
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Stats cards improvements */
+  .surface-card {
+    transition: all 0.2s ease;
+    border: 1px solid var(--surface-border);
+  }
+
+  .surface-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Stats cards responsive */
+  .grid > .col-12,
+  .grid > .col-6 {
+    padding: 0.5rem;
+  }
+
+  /* Mobile: Primera card ocupa todo el ancho, las otras 2 se dividen */
+  @media (max-width: 575px) {
+    .grid {
+      margin: -0.5rem;
+    }
+    
+    .grid > .col-12 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    
+    .grid > .col-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+
+  /* Tablet y Desktop: 3 columnas iguales */
+  @media (min-width: 576px) {
+    .grid > .col-12,
+    .grid > .col-6 {
+      padding: 0.75rem;
+      flex: 0 0 33.333333%;
+      max-width: 33.333333%;
+    }
+  }
+
+  /* Button responsive adjustments */
+  .flex.gap-2 {
+    gap: 0.5rem;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 767px) {
+    .p-button {
+      font-size: 0.875rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .p-button .p-button-label {
+      font-weight: 500;
+    }
+
+    .text-2xl {
+      font-size: 1.5rem !important;
+    }
+
+    .surface-card {
+      padding: 1rem !important;
+    }
+  }
+}
