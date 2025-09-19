@@ -4,8 +4,9 @@ import { StatsCardComponent, type StatsCardData } from '../../atoms/stats-card/s
 
 export interface StatsCardsData {
   totalReservations: number;
+  totalValue: number;
   confirmedReservations: number;
-  pendingReservations: number;
+  pendingPayments: number;
   showTrends?: boolean;
   trends?: {
     total: { value: number; isPositive: boolean };
@@ -28,10 +29,25 @@ export class StatsCardsSectionComponent {
     const statsData = this.data();
     return {
       title: 'Total Reservas',
-      value: statsData.totalReservations.toLocaleString(),
+      value: statsData.totalReservations.toString(),
       icon: 'pi pi-calendar',
-      color: 'gray',
+      color: 'orange',
       trend: statsData.showTrends && statsData.trends?.total ? statsData.trends.total : undefined
+    };
+  }
+
+  getTotalValueCard(): StatsCardData {
+    const statsData = this.data();
+    return {
+      title: 'Valor Total',
+      value: `${statsData.totalValue.toLocaleString('en-US', { 
+        style: 'currency', 
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`,
+      icon: 'pi pi-dollar',
+      color: 'green'
     };
   }
 
@@ -39,20 +55,20 @@ export class StatsCardsSectionComponent {
     const statsData = this.data();
     return {
       title: 'Confirmadas',
-      value: statsData.confirmedReservations.toLocaleString(),
+      value: statsData.confirmedReservations.toString(),
       icon: 'pi pi-check-circle',
-      color: 'green',
+      color: 'blue',
       trend: statsData.showTrends && statsData.trends?.confirmed ? statsData.trends.confirmed : undefined
     };
   }
 
-  getPendingReservationsCard(): StatsCardData {
+  getPendingPaymentsCard(): StatsCardData {
     const statsData = this.data();
     return {
-      title: 'Pendientes',
-      value: statsData.pendingReservations.toLocaleString(),
+      title: 'Pagos Pendientes',
+      value: statsData.pendingPayments.toString(),
       icon: 'pi pi-clock',
-      color: 'orange',
+      color: 'yellow',
       trend: statsData.showTrends && statsData.trends?.pending ? statsData.trends.pending : undefined
     };
   }

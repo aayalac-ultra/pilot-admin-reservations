@@ -124,19 +124,22 @@ export class ReservationsListPageComponent implements OnInit {
     if (!reservations) {
       return {
         totalReservations: 0,
+        totalValue: 0,
         confirmedReservations: 0,
-        pendingReservations: 0,
+        pendingPayments: 0,
         showTrends: false
       };
     }
 
     const confirmedCount = reservations.filter(r => r.status === 'CONFIRMED').length;
-    const pendingCount = reservations.filter(r => r.status === 'PENDING').length;
+    const pendingPayments = reservations.filter(r => r.paymentStatus === 'PENDING').length;
+    const totalValue = reservations.reduce((sum, r) => sum + r.totalAmount, 0);
 
     return {
       totalReservations: reservations.length,
+      totalValue: totalValue,
       confirmedReservations: confirmedCount,
-      pendingReservations: pendingCount,
+      pendingPayments: pendingPayments,
       showTrends: false // Could be enhanced with trends calculation
     };
   }

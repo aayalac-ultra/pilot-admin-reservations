@@ -1,71 +1,100 @@
 .stats-card {
-  @apply bg-white rounded-2xl p-6 shadow-sm border border-gray-100;
-  @apply hover:shadow-md hover:border-gray-200;
-  @apply transition-all duration-200 ease-in-out;
-  @apply cursor-default;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
 
   &__icon {
-    @apply w-12 h-12 rounded-xl flex items-center justify-center mb-4;
-    @apply transition-all duration-200;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    i {
+      font-size: 1.5rem;
+    }
   }
 
   &__content {
-    @apply space-y-1;
+    flex: 1;
+    min-width: 0;
   }
 
   &__title {
-    @apply text-sm font-medium text-gray-600;
-    @apply leading-tight;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
   }
 
   &__value {
-    @apply text-2xl font-bold text-gray-900;
-    @apply leading-none;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+    margin-bottom: 0.25rem;
   }
 
   &__trend {
-    @apply flex items-center mt-2;
-    @apply opacity-80;
-  }
-
-  // Color variants for hover effects
-  &--blue:hover {
-    @apply border-blue-200;
-
-    .stats-card__icon {
-      @apply bg-blue-200 text-blue-700;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    
+    i {
+      font-size: 0.75rem;
     }
   }
 
-  &--green:hover {
-    @apply border-green-200;
-
+  // Color variants
+  &--orange {
     .stats-card__icon {
-      @apply bg-green-200 text-green-700;
+      background: #fed7aa;
+      color: #ea580c;
     }
   }
 
-  &--orange:hover {
-    @apply border-orange-200;
-
+  &--green {
     .stats-card__icon {
-      @apply bg-orange-200 text-orange-700;
+      background: #bbf7d0;
+      color: #16a34a;
     }
   }
 
-  &--purple:hover {
-    @apply border-purple-200;
-
+  &--blue {
     .stats-card__icon {
-      @apply bg-purple-200 text-purple-700;
+      background: #dbeafe;
+      color: #2563eb;
     }
   }
 
-  &--gray:hover {
-    @apply border-gray-300;
-
+  &--yellow {
     .stats-card__icon {
-      @apply bg-gray-200 text-gray-700;
+      background: #fef3c7;
+      color: #d97706;
+    }
+  }
+
+  &--gray {
+    .stats-card__icon {
+      background: #f1f5f9;
+      color: #64748b;
     }
   }
 }
@@ -73,14 +102,19 @@
 // Responsive adjustments
 @media (max-width: 640px) {
   .stats-card {
-    @apply p-4;
-
+    padding: 1rem;
+    
     &__icon {
-      @apply w-10 h-10 mb-3;
+      width: 40px;
+      height: 40px;
+      
+      i {
+        font-size: 1.25rem;
+      }
     }
-
+    
     &__value {
-      @apply text-xl;
+      font-size: 1.5rem;
     }
   }
 }

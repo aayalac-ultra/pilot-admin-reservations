@@ -1,7 +1,7 @@
 <div class="stats-card" [ngClass]="getCardClasses()">
   <!-- Icon Section -->
   <div class="stats-card__icon" [ngClass]="getIconClasses()">
-    <i [class]="data().icon" class="text-lg"></i>
+    <i [class]="data().icon"></i>
   </div>
 
   <!-- Content Section -->
@@ -11,8 +11,8 @@
 
     <!-- Trend Section (if provided) -->
     <div *ngIf="data().trend" class="stats-card__trend" [ngClass]="getTrendClasses()">
-      <i [class]="getTrendIcon()" class="text-xs mr-1"></i>
-      <span class="text-xs font-medium">{{ data().trend!.value }}%</span>
+      <i [class]="getTrendIcon()"></i>
+      <span>{{ data().trend!.value }}%</span>
     </div>
   </div>
 </div>

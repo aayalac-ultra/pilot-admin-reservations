@@ -1,11 +1,48 @@
-<!-- Simplified Admin Shell -->
-<header class="p-4 border-b flex items-center justify-between bg-surface shadow-sm">
-  <h1 class="text-xl font-semibold">Smartlinks Reservations Admin</h1>
-  <nav class="flex gap-4 text-sm">
-    <!-- future nav links -->
-    <a mat-button disabled>Reservas</a>
+<!-- Modern Admin Shell with Mountain Background -->
+<div class="app-container">
+  <!-- Header with Mountain Background -->
+  <header class="app-header">
+    <div class="header-background"></div>
+    <div class="header-content">
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumbs">
+        <span class="breadcrumb-item">Reservas</span>
+        <i class="pi pi-chevron-right breadcrumb-separator"></i>
+        <span class="breadcrumb-item active">Ofertas Locales</span>
+      </nav>
+      
+      <!-- Title Section -->
+      <div class="header-title-section">
+        <h1 class="header-title">Ofertas Locales</h1>
+        <p class="header-subtitle">Gestión y seguimiento de reservas de ofertas locales</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="app-navigation">
+    <div class="nav-container">
+      <div class="nav-tabs">
+        <a class="nav-tab active" routerLink="/reservas">
+          <i class="pi pi-list"></i>
+          <span>Listado de Reservas</span>
+        </a>
+        <a class="nav-tab" routerLink="/dashboard">
+          <i class="pi pi-chart-bar"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-tab" routerLink="/ayuda">
+          <i class="pi pi-question-circle"></i>
+          <span>Ayuda y FAQs</span>
+        </a>
+      </div>
+    </div>
   </nav>
-</header>
-<main class="p-6">
-  <router-outlet></router-outlet>
-</main>
+
+  <!-- Main Content -->
+  <main class="app-main">
+    <div class="main-container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

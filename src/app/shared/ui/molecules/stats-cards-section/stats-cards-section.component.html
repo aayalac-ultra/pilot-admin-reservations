@@ -1,21 +1,23 @@
 <div class="stats-cards-section">
   <div class="stats-cards-section__container">
     <!-- Total Reservations Card -->
-    <app-stats-card
-      [data]="getTotalReservationsCard()"
-      class="stats-cards-section__card">
-    </app-stats-card>
+    <div class="stats-cards-section__card">
+      <app-stats-card [data]="getTotalReservationsCard()"></app-stats-card>
+    </div>
+
+    <!-- Total Value Card -->
+    <div class="stats-cards-section__card">
+      <app-stats-card [data]="getTotalValueCard()"></app-stats-card>
+    </div>
 
     <!-- Confirmed Reservations Card -->
-    <app-stats-card
-      [data]="getConfirmedReservationsCard()"
-      class="stats-cards-section__card">
-    </app-stats-card>
+    <div class="stats-cards-section__card">
+      <app-stats-card [data]="getConfirmedReservationsCard()"></app-stats-card>
+    </div>
 
-    <!-- Pending Reservations Card -->
-    <app-stats-card
-      [data]="getPendingReservationsCard()"
-      class="stats-cards-section__card">
-    </app-stats-card>
+    <!-- Pending Payments Card -->
+    <div class="stats-cards-section__card">
+      <app-stats-card [data]="getPendingPaymentsCard()"></app-stats-card>
+    </div>
   </div>
 </div>

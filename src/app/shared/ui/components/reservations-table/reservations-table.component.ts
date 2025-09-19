@@ -176,7 +176,13 @@ export class ReservationsTableComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
-    return this.uiConfig.formatDate(date, 'short');
+    return new Intl.DateTimeFormat('es-CO', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
   }
 
   formatTime(date: Date): string {
@@ -187,8 +193,23 @@ export class ReservationsTableComponent implements OnInit {
   }
 
   getLocationText(reservation: ReservationBase): string {
-    // Extract location from reservation data - this would depend on your data structure
-    return 'BAC Costa Rica'; // Placeholder - adjust based on your data
+    return reservation.marketplace.name || 'BAC Costa Rica';
+  }
+
+  getOfferTitle(reservation: ReservationBase): string {
+    return `Oferta especial en ${this.getOfferProvider(reservation)}`;
+  }
+
+  getOfferProvider(reservation: ReservationBase): string {
+    // This would come from the reservation data in a real implementation
+    const providers = [
+      'Peluquería Estilo',
+      'Óptica Visión',
+      'Tienda de Deportes',
+      'Estudio Fotográfico',
+      'Clínica Estética'
+    ];
+    return providers[Math.floor(Math.random() * providers.length)];
   }
 
   getProductDescription(reservation: ReservationBase): string {
@@ -211,8 +232,8 @@ export class ReservationsTableComponent implements OnInit {
 
   getStatusLabel(status: ReservationStatus): string {
     const labels = {
-      'PENDING': 'Pendiente',
-      'CONFIRMED': 'Confirmada',
+      'PENDING': 'Pago Pendiente',
+      'CONFIRMED': 'Reservada',
       'CANCELLED': 'Cancelada',
       'COMPLETED': 'Completada',
       'EXPIRED': 'Expirada'
@@ -222,9 +243,9 @@ export class ReservationsTableComponent implements OnInit {
 
   getPaymentStatusLabel(status: PaymentStatus): string {
     const labels = {
-      'PENDING': 'Pendiente',
-      'COMPLETED': 'Completado',
-      'FAILED': 'Fallido',
+      'PENDING': 'Pago Fallido',
+      'COMPLETED': 'Pago Exitoso',
+      'FAILED': 'Pago Fallido',
       'REFUNDED': 'Reembolsado'
     };
     return labels[status] || status;
